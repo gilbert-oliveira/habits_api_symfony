@@ -1,0 +1,7 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath  = "docker/production/Dockerfile"
+
+[deploy]
+healthcheckTimeout = 100
+restartPolicyType = "never"

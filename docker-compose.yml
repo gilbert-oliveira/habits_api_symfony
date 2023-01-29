@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  app:
+    build: ./docker
+    image: gilbert/symfony
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/health']
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    ports:
+      - '80:80'
+    volumes:
+      - .:/var/www
+    networks:
+      - api-habits
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: habits_api
+      MYSQL_USER: habits_api
+      MYSQL_PASSWORD: habits_api
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'habits_api', '-phabits_api']
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    ports:
+      - '3306:3306'
+    volumes:
+      - .data/db:/var/lib/mysql
+    networks:
+      - api-habits
+
+volumes:
+  var-data:
+  composer-cache:
+
+networks:
+  api-habits:
+    driver: bridge

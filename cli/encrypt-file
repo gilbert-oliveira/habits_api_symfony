@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Este script é usado para criptografar arquivos usando a chave de produção
+# e gerar um arquivo .gpg com o mesmo nome do arquivo original.
+
+# Uso: ./encrypt-file <input_file> <output_file> <password>
+
+# Verifica se o arquivo de input foi informado
+if [ -z "$1" ]; then
+    echo "Arquivo de entrada não informado"
+    exit 1
+fi
+
+# Verifica se o arquivo de output foi informado
+if [ -z "$2" ]; then
+    echo "Arquivo de saída não informado"
+    exit 1
+fi
+
+# Verifica se a senha foi informada
+if [ -z "$3" ]; then
+    echo "Senha não informada"
+    exit 1
+fi
+
+
+# Verifica se o arquivo de entrada existe
+if [ ! -f "$1" ]; then
+    echo "Arquivo de entrada não encontrado"
+    exit 1
+fi
+
+# executa o comando de criptografia
+gpg --out "$2" --batch --yes --passphrase "$3" --symmetric --cipher-algo AES256 "$1"
+
+echo "[OK] Arquivo criptografado com sucesso"
